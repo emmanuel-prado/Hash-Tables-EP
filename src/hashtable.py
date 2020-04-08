@@ -64,10 +64,11 @@ class HashTable:
         print("current node:", current_node)
         # check to see if there is a key there already
         if current_node == None:
-            current_node = new_node
+            self.storage[index] = new_node
             return
         # go down the linked list chain of that particular index
         while current_node:
+            print("in the loop", current_node)
             # if it exists already, oops error out
             if current_node.value == value:
                 print(
@@ -76,6 +77,7 @@ class HashTable:
         # if not, insert the value as a new linked list node
             elif current_node.next == None:
                 current_node.next == new_node
+                return
             else:
                 current_node = current_node.next
 
@@ -97,7 +99,17 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # hash the key using _hash_mod method
+        index = self._hash_mod(key)
+        # loop through that index in storage until finding the matching key
+        curr_node = self.storage[index]
+        while curr_node:
+            if curr_node.key == key:
+                print("retrieve value", curr_node.value)
+                return curr_node.value
+            else:
+                curr_node = curr_node.next
+        return None
 
     def resize(self):
         '''
