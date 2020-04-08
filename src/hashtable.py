@@ -54,15 +54,30 @@ class HashTable:
 
         Fill this in.
         '''
-        print(key)
-        print(self.storage)
+        # wrap the key-value pair in a linked list node
+        new_node = LinkedPair(key, value)
+        print("new node key:", new_node.key, "value:", new_node.value)
         # run the key through the hash mod algorithm
         index = self._hash_mod(key)
         print("hash table index:", index)
+        current_node = self.storage[index]
+        print("current node:", current_node)
+        # check to see if there is a key there already
+        if current_node == None:
+            current_node = new_node
+            return
         # go down the linked list chain of that particular index
-
-        # if it exists already, oops error out
+        while current_node:
+            # if it exists already, oops error out
+            if current_node.value == value:
+                print(
+                    f"value ({value}) of key ({key}) is already stored in hash table")
+                break
         # if not, insert the value as a new linked list node
+            elif current_node.next == None:
+                current_node.next == new_node
+            else:
+                current_node = current_node.next
 
     def remove(self, key):
         '''
