@@ -54,32 +54,32 @@ class HashTable:
 
         Fill this in.
         '''
+        print(f"inserting {key} and {value}")
         # wrap the key-value pair in a linked list node
         new_node = LinkedPair(key, value)
-        print("new node key:", new_node.key, "value:", new_node.value)
         # run the key through the hash mod algorithm
         index = self._hash_mod(key)
-        print("hash table index:", index)
-        current_node = self.storage[index]
-        print("current node:", current_node)
+        # declare a variable for keeping track of the current node
+        curr_node = self.storage[index]
         # check to see if there is a key there already
-        if current_node == None:
-            self.storage[index] = new_node
+        if curr_node == None:
+            curr_node = new_node
             return
         # go down the linked list chain of that particular index
-        while current_node:
-            print("in the loop", current_node)
+        while curr_node:
+            print("in the loop",
+                  curr_node.key, curr_node.value)
             # if it exists already, oops error out
-            if current_node.value == value:
+            if curr_node.key == key:
                 print(
-                    f"value ({value}) of key ({key}) is already stored in hash table")
+                    f"key-value pair is already stored in hash table")
                 break
         # if not, insert the value as a new linked list node
-            elif current_node.next == None:
-                current_node.next == new_node
+            elif curr_node.next == None:
+                curr_node.next = new_node
                 return
             else:
-                current_node = current_node.next
+                curr_node = curr_node.next
 
     def remove(self, key):
         '''
@@ -89,7 +89,19 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # hash the key to retrieve a valid index within storage
+        index = self._hash_mod(key)
+        # iterate through each linked list node until finding the correct node
+        curr_node = self.storage[index]
+        while curr_node:
+            if curr_node.key == key:
+                # delete the value (change it to none)
+                key.value = None
+                return
+            else:
+                curr_node = curr_node.next
+        # print a warning if the key isn't found
+        print("Warning! Key was not found.")
 
     def retrieve(self, key):
         '''
@@ -100,11 +112,13 @@ class HashTable:
         Fill this in.
         '''
         # hash the key using _hash_mod method
+        print("retrieving:", key)
         index = self._hash_mod(key)
         # loop through that index in storage until finding the matching key
         curr_node = self.storage[index]
         while curr_node:
             if curr_node.key == key:
+                print("retrieve key", curr_node.key)
                 print("retrieve value", curr_node.value)
                 return curr_node.value
             else:
