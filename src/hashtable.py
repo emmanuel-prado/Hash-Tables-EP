@@ -54,7 +54,6 @@ class HashTable:
 
         Fill this in.
         '''
-        print(f"inserting {key} and {value}")
         # wrap the key-value pair in a linked list node
         new_node = LinkedPair(key, value)
         # run the key through the hash mod algorithm
@@ -62,18 +61,15 @@ class HashTable:
         # declare a variable for keeping track of the current node
         curr_node = self.storage[index]
         # check to see if there is a key there already
-        if curr_node == None:
-            curr_node = new_node
+        if self.storage[index] == None:
+            self.storage[index] = new_node
             return
         # go down the linked list chain of that particular index
         while curr_node:
-            print("in the loop",
-                  curr_node.key, curr_node.value)
             # if it exists already, oops error out
             if curr_node.key == key:
-                print(
-                    f"key-value pair is already stored in hash table")
-                break
+                curr_node.value = value
+                return
         # if not, insert the value as a new linked list node
             elif curr_node.next == None:
                 curr_node.next = new_node
@@ -96,7 +92,7 @@ class HashTable:
         while curr_node:
             if curr_node.key == key:
                 # delete the value (change it to none)
-                key.value = None
+                curr_node.value = None
                 return
             else:
                 curr_node = curr_node.next
@@ -112,14 +108,11 @@ class HashTable:
         Fill this in.
         '''
         # hash the key using _hash_mod method
-        print("retrieving:", key)
         index = self._hash_mod(key)
         # loop through that index in storage until finding the matching key
         curr_node = self.storage[index]
         while curr_node:
             if curr_node.key == key:
-                print("retrieve key", curr_node.key)
-                print("retrieve value", curr_node.value)
                 return curr_node.value
             else:
                 curr_node = curr_node.next
@@ -132,7 +125,34 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # double the capacity
+        self.capacity = self.capacity * 2
+        # declare a new_storage variable to hold the new buckets
+        new_storage = [None] * self.capacity
+        # iterate through each index of the old table
+        for index in self.storage:
+            old_storage_node = index
+            # traverse through each linked list node of the index
+            while old_storage_node:
+                # re-hash the key
+                rehashed_index = self._hash_mod(old_storage_node.key)
+                # declare a new LinkedPair node
+                new_node = LinkedPair(
+                    old_storage_node.key, old_storage_node.value)
+                # insert the re-hashed key-value pair into the new table
+                if new_storage[rehashed_index] == None:
+                    new_storage[rehashed_index] = new_node
+                    break
+                # if there is already a key-value pair there, set up a loop to avoid collisions
+                new_storage_node = new_storage[rehashed_index]
+                while new_storage_node:
+                    if new_storage_node.next == None:
+                        new_storage_node.next = new_node
+                        break
+                    else:
+                        new_storage_node = new_storage_node.next
+        # overwrite the old storage with the new storage table
+        self.storage = new_storage
 
 
 if __name__ == "__main__":
