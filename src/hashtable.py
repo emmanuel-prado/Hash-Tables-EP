@@ -61,7 +61,7 @@ class HashTable:
         # declare a variable for keeping track of the current node
         curr_node = self.storage[index]
         # check to see if there is a key there already
-        if self.storage[index] == None:
+        if self.storage[index] is None:
             self.storage[index] = new_node
             return
         # go down the linked list chain of that particular index
@@ -71,7 +71,7 @@ class HashTable:
                 curr_node.value = value
                 return
         # if not, insert the value as a new linked list node
-            elif curr_node.next == None:
+            elif curr_node.next is None:
                 curr_node.next = new_node
                 return
             else:
