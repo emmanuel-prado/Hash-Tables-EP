@@ -127,32 +127,25 @@ class HashTable:
         '''
         # double the capacity
         self.capacity = self.capacity * 2
-        # declare a new_storage variable to hold the new buckets
-        new_storage = [None] * self.capacity
-        # iterate through each index of the old table
-        for index in self.storage:
-            old_storage_node = index
-            # traverse through each linked list node of the index
-            while old_storage_node:
-                # re-hash the key
-                rehashed_index = self._hash_mod(old_storage_node.key)
-                # declare a new LinkedPair node
-                new_node = LinkedPair(
-                    old_storage_node.key, old_storage_node.value)
-                # insert the re-hashed key-value pair into the new table
-                if new_storage[rehashed_index] == None:
-                    new_storage[rehashed_index] = new_node
-                    break
-                # if there is already a key-value pair there, set up a loop to avoid collisions
-                new_storage_node = new_storage[rehashed_index]
-                while new_storage_node:
-                    if new_storage_node.next == None:
-                        new_storage_node.next = new_node
-                        break
-                    else:
-                        new_storage_node = new_storage_node.next
-        # overwrite the old storage with the new storage table
-        self.storage = new_storage
+        # declare a variable to hold the old storage data
+        old_storage = self.storage
+        # resize the current storage to be the size of the new capacity
+        self.storage = [None] * self.capacity
+        # iterate over the old storage
+        for index in old_storage:
+            # check if the old storage index is None
+            if index is None:
+                continue
+            # check if the old storage index has a next pointer
+            elif index.next is None:
+                # copy the data over to the resized storage
+                self.insert(index.key, index.value)
+            else:
+                # traverse that index to copy every node in the entire chain into the new storage
+                curr_node = index
+                while curr_node:
+                    self.insert(curr_node.key, curr_node.value)
+                    curr_node = curr_node.next
 
 
 if __name__ == "__main__":
